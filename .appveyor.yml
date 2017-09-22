@@ -35,6 +35,7 @@ install:
   - if not exist php-installed.txt echo extension_dir=ext >> php.ini
   - if not exist php-installed.txt echo extension=php_mbstring.dll >> php.ini
   - if not exist php-installed.txt echo extension=php_intl.dll >> php.ini
+  - if not exist php-installed.txt echo extension=php_openssl >> php.ini
   - if not exist php-installed.txt echo zend.assertions=1 >> php.ini
   - if not exist php-installed.txt echo assert.exception=On >> php.ini
   - if not exist php-installed.txt type nul > php-installed.txt
