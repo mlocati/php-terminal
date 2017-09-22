@@ -15,7 +15,7 @@ clone_depth: 50
 
 cache:
   - C:\tools\downloads -> .appveyor.yml
-  - %LOCALAPPDATA%\Composer\files
+  - '%LOCALAPPDATA%\Composer\files'
 
 install:
   - if not exist C:\tools mkdir C:\tools
