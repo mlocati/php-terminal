@@ -1,0 +1,51 @@
+{
+    "name": "mlocati/terminal",
+    "description": "Restart the running PHP script, overriding INI settings.",
+    "keywords": [
+        "php",
+        "executable",
+        "script"
+    ],
+    "type": "library",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Michele Locati",
+            "email": "michele@locati.it",
+            "homepage": "https://mlocati.github.io",
+            "role": "author"
+        }
+    ],
+    "homepage": "https://github.com/mlocati/php-terminal",
+    "support": {
+        "issues": "https://github.com/mlocati/php-terminal/issues",
+        "source": "https://github.com/mlocati/php-terminal"
+    },
+    "require": {
+        "php": ">=5.5"
+    },
+    "autoload": {
+        "psr-4": {
+            "MLocati\\Terminal\\": "src/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "MLocati\\Terminal\\Test\\": "test/tests/"
+        }
+    },
+    "require-dev": {
+        "phpunit/phpunit": "^4.8"
+    },
+    "config": {
+        "platform": {
+            "php": "5.5"
+        }
+    },
+    "scripts": {
+        "test": "phpunit --verbose",
+        "post-create-project-cmd": [
+            "composer config --unset platform.php"
+        ]
+    }
+}
