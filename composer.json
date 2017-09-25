@@ -44,6 +44,7 @@
     },
     "scripts": {
         "test": "phpunit --verbose",
+        "test-with-coverage": "phpunit --coverage-clover code-coverage.xml",
         "post-create-project-cmd": [
             "composer config --unset platform.php"
         ]

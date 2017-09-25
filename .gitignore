@@ -1,4 +1,5 @@
 /test/assets/bin/
 /vendor/
-/composer.lock
 /.php_cs.cache
+/code-coverage.xml
+/composer.lock
