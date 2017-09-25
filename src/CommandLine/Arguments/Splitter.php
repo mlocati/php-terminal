@@ -232,7 +232,7 @@ class Splitter
             throw new InvalidCommandLineException($commandLineArguments);
         }
 
-        return $this->splitCommandLineArguments_Windows_2008($commandLineArguments);
+        return $this->splitCommandLineArguments_Windows_Pre2008($commandLineArguments);
     }
 
     /**

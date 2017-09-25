@@ -31,17 +31,21 @@ class WindowsCodepager
     public function getCodepage()
     {
         if ($this->codepage === null) {
-            $rc = -1;
-            $output = [];
-            @exec('chcp 2>&1', $output, $rc);
-            if ($rc !== 0) {
-                throw new WindowsCodepageDetectionFailed(trim(implode("\n", $output)));
+            if (PHP_VERSION_ID >= 70100) {
+                $this->codepage = sapi_windows_cp_get();
+            } else {
+                $rc = -1;
+                $output = [];
+                @exec('chcp 2>&1', $output, $rc);
+                if ($rc !== 0) {
+                    throw new WindowsCodepageDetectionFailed(trim(implode("\n", $output)));
+                }
+                $output = array_values(array_filter($output));
+                if (count($output) !== 1 || !preg_match('/(\d+)$/', $output[0], $matches)) {
+                    throw new WindowsCodepageDetectionFailed(sprintf("Failed to detect the Windows codepage starting from this string:\n%s", implode("\n", $output)));
+                }
+                $this->codepage = (int) $matches[1];
             }
-            $output = array_values(array_filter($output));
-            if (count($output) !== 1 || !preg_match('/(\d+)$/', $output[0], $matches)) {
-                throw new WindowsCodepageDetectionFailed(sprintf("Failed to detect the Windows codepage starting from this string:\n%s", implode("\n", $output)));
-            }
-            $this->codepage = (int) $matches[1];
         }
 
         return $this->codepage;

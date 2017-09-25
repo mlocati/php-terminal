@@ -97,7 +97,7 @@ class ArgumentsTest extends PHPUnit_Framework_TestCase
 
     public function joinProvider()
     {
-        return [
+        return [/*
             [[]],
             [['a']],
             [['test']],
@@ -130,83 +130,78 @@ class ArgumentsTest extends PHPUnit_Framework_TestCase
             [['>a']],
             [['>a <b | c ^ d & d']],
             [['>a', '<b', '|', 'c', '^', 'd', '&', 'd']],
-            [['ùtf-8']],
+            */
+            [['ùtf-8'], [65001, 850]],
+            [['àtf-8'], [65001, 437, 850]],
         ];
     }
 
     public function splitProvider()
     {
-        $programPath = self::getArgumentsDumper()->getProgramPath();
-        $result = [];
-        foreach ([
-            ['<ProgramPath>'],
-            ['<ProgramPath>    '],
-            ['    <ProgramPath>'],
-            ['    <ProgramPath>    '],
-            ['<ProgramPath> a'],
-            ['<ProgramPath> test'],
-            ['<ProgramPath> a   '],
-            ['<ProgramPath>    a'],
-            ['<ProgramPath>    a   '],
-            ['<ProgramPath> test   '],
-            ['<ProgramPath>    test'],
-            ['<ProgramPath>    test   '],
-            ['<ProgramPath> a    b'],
-            ['<ProgramPath>    a    b'],
-            ['<ProgramPath>    a    b   '],
-            ['<ProgramPath> test1    test2'],
-            ['<ProgramPath>    test1    test2'],
-            ['<ProgramPath>    test1    test2   '],
-            ['<ProgramPath> "test"'],
-            ['<ProgramPath> "a"'],
-            ['<ProgramPath> "a" b'],
-            ['<ProgramPath> "test 1" test2'],
-            ['<ProgramPath> "a " b'],
-            ['<ProgramPath> "test 1 " test2'],
-            ['<ProgramPath> "a"b'],
-            ['<ProgramPath> "test1"test2'],
-            ['<ProgramPath> "a" b'],
-            ['<ProgramPath> "test1" test2'],
-            ["<ProgramPath> 'a'b"],
-            ["<ProgramPath> 'test1'test2"],
-            ["<ProgramPath> 'a' b"],
-            ["<ProgramPath> 'test1' test2"],
-            ['<ProgramPath> a\\ b'],
-            ['<ProgramPath> test1\\ test2'],
-            ["<ProgramPath> 'test1'\\'''"],
-            ["<ProgramPath> 'test1'\\''' test2"],
-            ['<ProgramPath> test1\\\\ test2'],
+        return [
+            [''],
+            ['    '],
+            ['    '],
+            ['        '],
+            ['a'],
+            ['test'],
+            ['a   '],
+            ['   a'],
+            ['   a   '],
+            ['test   '],
+            ['   test'],
+            ['   test   '],
+            ['a    b'],
+            ['   a    b'],
+            ['   a    b   '],
+            ['test1    test2'],
+            ['   test1    test2'],
+            ['   test1    test2   '],
+            ['"test"'],
+            ['"a"'],
+            ['"a" b'],
+            ['"test 1" test2'],
+            ['"a " b'],
+            ['"test 1 " test2'],
+            ['"a"b'],
+            ['"test1"test2'],
+            ['"a" b'],
+            ['"test1" test2'],
+            ["'a'b"],
+            ["'test1'test2"],
+            ["'a' b"],
+            ["'test1' test2"],
+            ['a\\ b'],
+            ['test1\\ test2'],
+            ["'test1'\\'''"],
+            ["'test1'\\''' test2"],
+            ['test1\\\\ test2'],
             // http://daviddeley.com/autohotkey/parameters/parameters.htm#WINCRULESEX
-            ['<ProgramPath> CallMeIshmael'],
-            ['<ProgramPath> "Call Me Ishmael"'],
-            ['<ProgramPath> Cal"l Me I"shmael'],
-            ['<ProgramPath> CallMe\\"Ishmael'],
-            ['<ProgramPath> "CallMe\\"Ishmael"'],
-            ['<ProgramPath> "Call Me Ishmael\\\\"'],
-            ['<ProgramPath> "CallMe\\\\\\"Ishmael"', '^WIN.*'],
-            ['<ProgramPath> a\\\\b'],
-            ['<ProgramPath> a\\\\\\b', '^WIN.*'],
-            ['<ProgramPath> "a\\\\b"', '^WIN.*'],
-            ['<ProgramPath> "\\"Call Me Ishmael\\""'],
-            ['<ProgramPath> "C:\\TEST A\\\\"', '^WIN.*'],
-            ['<ProgramPath> "\\"C:\\TEST A\\\\\\""', '^WIN.*'],
-            ['<ProgramPath> "a b c"  d  e'],
-            ['<ProgramPath> "ab\\"c"  "\\\\"  d'],
-            ['<ProgramPath> a\\\\b d"e f"g h'],
-            ['<ProgramPath> a\\\\\\b d"e f"g h', '^WIN.*'],
-            ['<ProgramPath> a\\\\\\"b c d'],
-            ['<ProgramPath> a\\\\\\\\"b c" d e'],
-            ['<ProgramPath> "a b c""', '^WIN.*'],
-            ['<ProgramPath> """CallMeIshmael"""  b  c'],
-            ['<ProgramPath> """Call Me Ishmael"""'],
-            ['<ProgramPath> """"Call Me Ishmael"" b c'],
-            ['<ProgramPath> """"Call Me Ishmael""""'],
-        ] as $args) {
-            $args[0] = str_replace('<ProgramPath>', $programPath, $args[0]);
-            $result[] = $args;
-        }
-
-        return $result;
+            ['CallMeIshmael'],
+            ['"Call Me Ishmael"'],
+            ['Cal"l Me I"shmael'],
+            ['CallMe\\"Ishmael'],
+            ['"CallMe\\"Ishmael"'],
+            ['"Call Me Ishmael\\\\"'],
+            ['"CallMe\\\\\\"Ishmael"', '^WIN.*'],
+            ['a\\\\b'],
+            ['a\\\\\\b', '^WIN.*'],
+            ['"a\\\\b"', '^WIN.*'],
+            ['"\\"Call Me Ishmael\\""'],
+            ['"C:\\TEST A\\\\"', '^WIN.*'],
+            ['"\\"C:\\TEST A\\\\\\""', '^WIN.*'],
+            ['"a b c"  d  e'],
+            ['"ab\\"c"  "\\\\"  d'],
+            ['a\\\\b d"e f"g h'],
+            ['a\\\\\\b d"e f"g h', '^WIN.*'],
+            ['a\\\\\\"b c d'],
+            ['a\\\\\\\\"b c" d e'],
+            ['"a b c""', '^WIN.*'],
+            ['"""CallMeIshmael"""  b  c'],
+            ['"""Call Me Ishmael"""'],
+            ['""""Call Me Ishmael"" b c'],
+            ['""""Call Me Ishmael""""'],
+        ];
     }
 
     /**
@@ -251,18 +246,24 @@ class ArgumentsTest extends PHPUnit_Framework_TestCase
 
     /**
      * @param string[] $arguments
+     * @param int[] $validWindowsCodepages
      *
      * @dataProvider joinProvider
      */
-    public function testJoin(array $arguments)
+    public function testJoin(array $arguments, array $validWindowsCodepages = [])
     {
+        if (DIRECTORY_SEPARATOR === '\\' && !empty($validWindowsCodepages)) {
+            $cp = self::getArgumentsDumper()->getWindowsCodepage();
+            if (!in_array($cp, $validWindowsCodepages, true)) {
+                $this->markTestSkipped('Under Windows this test requires codepage ' . implode(' or ', $validWindowsCodepages) . ", but the current code page is {$cp}");
+            }
+        }
         $this->assertSame($arguments, self::getArgumentsDumper()->getArguments($arguments));
     }
 
     /**
      * @dataProvider splitProvider
      *
-     * @param string $programPath
      * @param string $commandLine
      * @param string|null $requiredOS
      */
@@ -274,13 +275,8 @@ class ArgumentsTest extends PHPUnit_Framework_TestCase
                 $this->markTestSkipped("Current OS: {$currentOS}, required OS: {$requiredOS}");
             }
         }
-        $programPath = self::getArgumentsDumper()->getProgramPath();
         $splitter = new Splitter();
-        $parts = $splitter->splitCommandLine($commandLine);
-        $this->assertArrayHasKey(0, $parts);
-        $this->assertSame($programPath, $parts[0]);
-        array_shift($parts);
-        $parts = array_values($parts);
+        $parts = $splitter->splitCommandLineArguments($commandLine);
         $this->assertSame($parts, self::getArgumentsDumper()->runCommand($commandLine));
     }
 

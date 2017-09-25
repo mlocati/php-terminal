@@ -29,20 +29,19 @@ install:
   - if not exist %PHP_ZIP% (appveyor DownloadFile http://windows.php.net/downloads/releases/%PHP_ZIP% || exit 0)
   - if not exist %PHP_ZIP% appveyor DownloadFile http://windows.php.net/downloads/releases/qa/%PHP_ZIP%
   - if not exist composer.phar appveyor DownloadFile https://getcomposer.org/download/1.4.2/composer.phar
-  - set PHP_XDEBUG_DLL=php_xdebug-%XDEBUG_VERSION%-%PHP_VERSION:~0,3%-vc%VC_VERSION%-nts.dll
+  - set PHP_XDEBUG_DLL=php_xdebug-%XDEBUG_VERSION%-%PHP_VERSION:~0,3%-vc%VC_VERSION%.dll
   - if not exist %PHP_XDEBUG_DLL% appveyor DownloadFile https://xdebug.org/files/%PHP_XDEBUG_DLL%
   - cd /D C:\tools
   - if not exist php-%PHP_VERSION% mkdir php-%PHP_VERSION%
   - cd /D C:\tools\php-%PHP_VERSION%
   - if not exist php-installed.txt 7z x -bd -o. -y -- ..\downloads\%PHP_ZIP% >NUL
-  - if not exist ext\%PHP_XDEBUG_DLL% copy C:\tools\downloads\%PHP_XDEBUG_DLL% ext >NUL
   - if not exist php-installed.txt copy /Y php.ini-development php.ini
   - if not exist php-installed.txt echo date.timezone="UTC" >> php.ini
   - if not exist php-installed.txt echo extension_dir=ext >> php.ini
   - if not exist php-installed.txt echo extension=php_mbstring.dll >> php.ini
   - if not exist php-installed.txt echo extension=php_intl.dll >> php.ini
   - if not exist php-installed.txt echo extension=php_openssl >> php.ini
-  - if not exist php-installed.txt echo zend_extension=%PHP_XDEBUG_DLL% >> php.ini
+  - if not exist php-installed.txt echo zend_extension=C:\tools\downloads\%PHP_XDEBUG_DLL% >> php.ini
   - if not exist php-installed.txt echo zend.assertions=1 >> php.ini
   - if not exist php-installed.txt echo assert.exception=On >> php.ini
   - if not exist php-installed.txt type nul > php-installed.txt

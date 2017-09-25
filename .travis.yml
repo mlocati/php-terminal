@@ -14,22 +14,33 @@ env:
   global:
     - COMPOSER_DISABLE_XDEBUG_WARN=1
     - CODE_COVERAGE=no
+    - CHECK_CODINGSTYLE=no
 
 matrix:
   fast_finish: true
+  include:
+    - php: 7.1
+      env:
+        - CHECK_CODINGSTYLE=yes
   allow_failures:
     - php: 7.2
     - php: nightly
 
 before_install:
-  - if [ ${TRAVIS_PHP_VERSION:0:4} = 7.1. ]; then export CODE_COVERAGE=yes; fi
+  - if [ ${TRAVIS_PHP_VERSION:0:3} = 7.1 ]; then export CODE_COVERAGE=yes; fi
   - if [ ${CODE_COVERAGE} = no ]; then phpenv config-rm xdebug.ini; fi
 
 before_script:
   - travis_retry composer update --no-suggest --no-interaction
 
 script:
-  - if [ ${CODE_COVERAGE} = yes ]; then composer test-with-coverage; else composer test; fi
+  - if [ ${CHECK_CODINGSTYLE} = yes ]; then
+    	composer check-coding-style;
+    elif [ ${CODE_COVERAGE} = yes ]; then
+    	composer test-with-coverage;
+    else
+    	composer test;
+    fi
 
 after_success:
   - if [ ${CODE_COVERAGE} = yes ]; then bash <(curl -s https://codecov.io/bash) -f code-coverage.xml; fi
