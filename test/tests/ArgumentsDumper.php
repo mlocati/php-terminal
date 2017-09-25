@@ -3,6 +3,7 @@
 namespace MLocati\Terminal\Test;
 
 use Exception;
+use MLocati\Terminal\CommandLine\Arguments\Joiner;
 use MLocati\Terminal\CommandLine\WindowsCodepager;
 
 class ArgumentsDumper
@@ -13,19 +14,20 @@ class ArgumentsDumper
 
     private static $windowsCodepager;
 
-    public function getArgumentsWithProgram($commandlineArguments)
+    public function getArguments(array $arguments)
     {
         $executable = $this->getProgramPath();
-        $cmd = escapeshellarg($executable);
-        if ($commandlineArguments !== '') {
-            $cmd .= ' ' . $commandlineArguments;
-        }
-        if ('\\' === DIRECTORY_SEPARATOR) {
-            $cmd = self::getWindowsCodepager()->encode($cmd);
-        }
+        $joiner = new Joiner();
+        $commandLine = $joiner->joinCommandLine(array_merge([$executable], $arguments));
+
+        return $this->runCommand($commandLine);
+    }
+
+    public function runCommand($commandLine)
+    {
         $rc = -1;
         $output = [];
-        @exec($cmd, $output, $rc);
+        @exec($commandLine, $output, $rc);
         if ($rc !== 0) {
             throw new Exception(basename($executable) . " failed with return code {$rc}: " . trim(implode("\n", $output)));
         }
@@ -34,7 +36,6 @@ class ArgumentsDumper
                 $output[$i] = self::getWindowsCodepager()->decode($output[$i]);
             }
         }
-
         $numArguments = (int) array_shift($output);
         $dump = trim(implode("\n", $output));
         $tempDump = $dump . "\n#{$numArguments}>>>";
@@ -56,19 +57,7 @@ class ArgumentsDumper
         return $result;
     }
 
-    private function getAssetsDirectory()
-    {
-        if ($this->assetsDirectory === null) {
-            $this->assetsDirectory = @realpath(dirname(__DIR__) . '/assets');
-        }
-        if ($this->assetsDirectory === false) {
-            throw new Exception('Failed to locate the assets directory.');
-        }
-
-        return $this->assetsDirectory;
-    }
-
-    private function getProgramPath()
+    public function getProgramPath()
     {
         if ($this->programPath === null) {
             try {
@@ -82,6 +71,18 @@ class ArgumentsDumper
         }
 
         return $this->programPath;
+    }
+
+    private function getAssetsDirectory()
+    {
+        if ($this->assetsDirectory === null) {
+            $this->assetsDirectory = @realpath(dirname(__DIR__) . '/assets');
+        }
+        if ($this->assetsDirectory === false) {
+            throw new Exception('Failed to locate the assets directory.');
+        }
+
+        return $this->assetsDirectory;
     }
 
     private function getProgramPath_Posix()

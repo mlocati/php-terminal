@@ -129,18 +129,18 @@ class Joiner
             $result = '"' . $result . '"';
         }
 
-        $wasEscaping = $this->isEscapeForWindowsCodepageEnabled();
+        $convertCodepage = $this->isEscapeForWindowsCodepageEnabled();
         $this->setEnableEscapeForWindowsCodepage(false);
         try {
             $args = $this->joinCommandLineArguments_Windows($temp);
         } finally {
-            $this->setEnableEscapeForWindowsCodepage($wasEscaping);
+            $this->setEnableEscapeForWindowsCodepage($convertCodepage);
         }
         if ($args !== '') {
             $result .= ' ' . $args;
         }
 
-        if ($this->isEscapeForWindowsCodepageEnabled()) {
+        if ($convertCodepage) {
             $result = $this->getWindowsCodepager()->encode($result);
         }
 
